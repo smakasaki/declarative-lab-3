@@ -1,30 +1,18 @@
-import csv
+import os
 
 
-def read_csv_data(csv_path):
-    data = {'negative': [], 'positive': []}
-    with open(csv_path, 'r') as csvfile:
-        csvreader = csv.reader(csvfile)
-        for row in csvreader:
-            data[row[2]].append(row[0])
-    return data
+def get_next_file(dataset_path, class_name):
+    class_dir = os.path.join(dataset_path, class_name)
+    files = sorted(os.listdir(class_dir))
 
-
-def create_generator(data, class_name):
-    for item in data[class_name]:
-        yield item
+    for file_name in files:
+        yield os.path.join(class_dir, file_name)
     yield None
 
 
-def get_next_item(csv_path, class_name):
-    data = read_csv_data(csv_path)
-    return create_generator(data, class_name)
-
-
-negative_generator = get_next_item("annotation.csv", "negative")
-
-while True:
-    file_path = next(negative_generator)
+generator = get_next_file('dataset', 'positive')
+for file_path in generator:
     if file_path is None:
+        print("No more files!")
         break
     print(file_path)
