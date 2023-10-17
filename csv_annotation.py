@@ -9,7 +9,11 @@ def create_annotation(dataset_path, csv_path):
             class_dir = os.path.join(dataset_path, class_name)
             for file_name in os.listdir(class_dir):
                 abs_path = os.path.abspath(os.path.join(class_dir, file_name))
-                rel_path = os.path.join(dataset_path, class_name, file_name)
+
+                # Получаем относительный путь
+                full_path = os.path.join(class_dir, file_name)
+                rel_path = os.path.relpath(full_path, dataset_path)
+
                 csvwriter.writerow([abs_path, rel_path, class_name])
 
 
